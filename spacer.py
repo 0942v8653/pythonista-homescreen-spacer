@@ -71,8 +71,8 @@ a {
 	position:absolute;
 	border-radius:12px;
 	background:rgba(255,0,0,0.5);
-	width:60px;
-	height:60px;
+	width:%dpx;
+	height:%dpx;
 }
 
 .chosen {
@@ -110,7 +110,7 @@ def page(row, column):
 	iconpng = geticon(row, column).to_png()
 	iconurl = 'data:image/png;base64,' + base64.b64encode(iconpng)
 	
-	html = pagetemplate % (iconurl, tagsstr)
+	html = pagetemplate % (iconurl, size/2, size/2, tagsstr)
 	redirecturl = 'data:text/html;base64,' + base64.b64encode(html)
 	bottle.redirect(redirecturl)
 
@@ -126,4 +126,3 @@ threading.Timer(1, webbrowser.open, ('safari-http://localhost:8080/0/0',)).start
 
 bottle.run(host='0.0.0.0', debug=False)
 	
-
