@@ -23,6 +23,7 @@ startpos = (32, 50)
 diff = (152, 176)
 cols, rows = 4, 5
 
+
 from ui import Image as UIImage
 from PIL import Image as PILImage
 import io          # image conversion
@@ -31,6 +32,11 @@ import webbrowser  # open page
 import threading   # delay open page
 import bottle      # web server
 import base64      # encode data
+from ui import get_screen_size
+from scene import get_screen_scale
+
+scale = get_screen_scale()
+screensize = get_screen_size()
 
 positions = [[(startpos[0] + diff[0]*col,
                startpos[1] + diff[1]*row)
@@ -78,10 +84,20 @@ a {
 .chosen {
 	background:rgba(0,0,255,0.5);
 }
+
+#background {
+	background: url(http://localhost:8080/screen.png);
+	background-size:100%%;
+	height:%dpx;
+}
+
+body {
+	margin:0;
+}
 </style>
 </head>
-<body style="margin:0;">
-<div style="background:url(http://localhost:8080/screen.png);background-size:320px 568px;height:568px">
+<body>
+<div id=background></div>
 %s
 </body>
 </html>
@@ -110,7 +126,7 @@ def page(row, column):
 	iconpng = geticon(row, column).to_png()
 	iconurl = 'data:image/png;base64,' + base64.b64encode(iconpng)
 	
-	html = pagetemplate % (iconurl, size/2, size/2, tagsstr)
+	html = pagetemplate % (iconurl, size/scale, size/scale, screensize[1], tagsstr)
 	redirecturl = 'data:text/html;base64,' + base64.b64encode(html)
 	bottle.redirect(redirecturl)
 
